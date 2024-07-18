@@ -1,6 +1,6 @@
-import {defineConfig} from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-
+import { resolve } from "path";
 import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
@@ -8,13 +8,14 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index: "lib/index.ts",
-        icons: "lib/icons/index.ts"
+        index: resolve(__dirname, "./lib/index.ts"),
+        icons: resolve(__dirname, "./lib/icons/index.tsx"),
       },
-      formats: ['es', 'cjs']
+      name: "mimui",
+      fileName: (format) => `[name].${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom"],
+      external: ["react", "react-dom", "@mui/icons-material"],
       output: {
         globals: {
           react: "React",
@@ -22,8 +23,7 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: true,
     emptyOutDir: true,
   },
-  plugins: [react(), dts({rollupTypes: true})],
+  plugins: [react(), dts({ rollupTypes: true })],
 });
